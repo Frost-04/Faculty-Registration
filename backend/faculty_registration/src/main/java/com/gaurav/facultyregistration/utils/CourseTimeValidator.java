@@ -22,7 +22,7 @@ public class CourseTimeValidator {
 
     // Existing method: Validate that a course schedule does not conflict with existing schedules
     public boolean isValidSchedule(Course course) {
-        if (course.getEmployee() == null || course.getEmployee().getEmployeeId() == null) {
+        if (course.getEmployee().getEmployeeId() == null) {
             return false; // Employee must be assigned
         }
 

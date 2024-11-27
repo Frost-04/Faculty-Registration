@@ -1,6 +1,8 @@
 package com.gaurav.facultyregistration.controller;
 
 import com.gaurav.facultyregistration.entity.Course;
+import com.gaurav.facultyregistration.exception.ResourceNotFoundException;
+import com.gaurav.facultyregistration.exception.ValidationException;
 import com.gaurav.facultyregistration.service.CourseService;
 import com.gaurav.facultyregistration.service.CourseScheduleService;
 import com.gaurav.facultyregistration.utils.CourseTimeValidator;
@@ -30,16 +32,16 @@ public class CourseController {
 
     @GetMapping("/{id}")
     public ResponseEntity<Course> getCourseById(@PathVariable Integer id) {
-        return courseService.getCourseById(id)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+        Course course = courseService.getCourseById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Course not found with ID: " + id));
+        return ResponseEntity.ok(course);
     }
 
     @PostMapping
     public ResponseEntity<?> createCourse(@RequestBody Course course) {
         // Validate scheduling constraints
-        if (!timeValidator.isValidSchedule(course)) {
-            return ResponseEntity.badRequest().body("Schedule conflict detected");
+        if (course.getEmployee().getEmployeeId()==null) {
+            throw new ValidationException("Schedule conflict detected");
         }
         return ResponseEntity.ok(courseService.saveCourse(course));
     }
@@ -47,11 +49,11 @@ public class CourseController {
     @PutMapping("/{id}")
     public ResponseEntity<?> updateCourse(@PathVariable Integer id, @RequestBody Course updatedCourse) {
         if (!courseService.getCourseById(id).isPresent()) {
-            return ResponseEntity.notFound().build();
+            throw new ResourceNotFoundException("Course not found with ID: " + id);
         }
         // Validate scheduling constraints
         if (!timeValidator.isValidSchedule(updatedCourse)) {
-            return ResponseEntity.badRequest().body("Schedule conflict detected");
+            throw new ValidationException("Schedule conflict detected");
         }
         updatedCourse.setCourseId(id);
         return ResponseEntity.ok(courseService.saveCourse(updatedCourse));
@@ -59,6 +61,9 @@ public class CourseController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteCourse(@PathVariable Integer id) {
+        if (!courseService.getCourseById(id).isPresent()) {
+            throw new ResourceNotFoundException("Course not found with ID: " + id);
+        }
         courseService.deleteCourse(id);
         return ResponseEntity.noContent().build();
     }

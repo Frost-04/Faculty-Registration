@@ -1,6 +1,7 @@
 package com.gaurav.facultyregistration.controller;
 
 import com.gaurav.facultyregistration.entity.Department;
+import com.gaurav.facultyregistration.exception.ResourceNotFoundException;
 import com.gaurav.facultyregistration.service.DepartmentService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -24,9 +25,9 @@ public class DepartmentController {
 
     @GetMapping("/{id}")
     public ResponseEntity<Department> getDepartmentById(@PathVariable Integer id) {
-        return departmentService.getDepartmentById(id)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+        Department department = departmentService.getDepartmentById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Department not found with ID: " + id));
+        return ResponseEntity.ok(department);
     }
 
     @PostMapping
@@ -37,7 +38,7 @@ public class DepartmentController {
     @PutMapping("/{id}")
     public ResponseEntity<Department> updateDepartment(@PathVariable Integer id, @RequestBody Department updatedDepartment) {
         if (!departmentService.getDepartmentById(id).isPresent()) {
-            return ResponseEntity.notFound().build();
+            throw new ResourceNotFoundException("Department not found with ID: " + id);
         }
         updatedDepartment.setDeptId(id);
         return ResponseEntity.ok(departmentService.saveDepartment(updatedDepartment));
@@ -45,6 +46,9 @@ public class DepartmentController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteDepartment(@PathVariable Integer id) {
+        if (!departmentService.getDepartmentById(id).isPresent()) {
+            throw new ResourceNotFoundException("Department not found with ID: " + id);
+        }
         departmentService.deleteDepartment(id);
         return ResponseEntity.noContent().build();
     }

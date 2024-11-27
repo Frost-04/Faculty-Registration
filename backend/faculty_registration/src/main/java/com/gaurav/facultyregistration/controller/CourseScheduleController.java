@@ -1,6 +1,8 @@
 package com.gaurav.facultyregistration.controller;
 
 import com.gaurav.facultyregistration.entity.CourseSchedule;
+import com.gaurav.facultyregistration.exception.ResourceNotFoundException;
+import com.gaurav.facultyregistration.exception.ValidationException;
 import com.gaurav.facultyregistration.service.CourseScheduleService;
 import com.gaurav.facultyregistration.utils.CourseTimeValidator;
 import org.springframework.http.ResponseEntity;
@@ -29,43 +31,52 @@ public class CourseScheduleController {
     // Get schedule by ID
     @GetMapping("/{id}")
     public ResponseEntity<CourseSchedule> getScheduleById(@PathVariable Integer id) {
-        return courseScheduleService.getScheduleById(id)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+        CourseSchedule schedule = courseScheduleService.getScheduleById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Schedule not found with ID: " + id));
+        return ResponseEntity.ok(schedule);
     }
 
-    // Create a new schedule
+
     @PostMapping
-    public ResponseEntity<?> createSchedule(@RequestBody CourseSchedule schedule) {
-        // Validate the schedule using CourseTimeValidator
-        if(schedule.getCourseTime() >23 || schedule.getCourseTime() <0) {
-            return ResponseEntity.badRequest().body("Invalid Time");
+    public ResponseEntity<CourseSchedule> createSchedule(@RequestBody CourseSchedule schedule) {
+        // Validate the schedule's time range
+        if (schedule.getCourseTime() > 23 || schedule.getCourseTime() < 0) {
+            throw new ValidationException("Invalid time. Time must be between 0 and 23.");
         }
-//        if (!timeValidator.isValidSchedule(schedule)) {
-//            return ResponseEntity.badRequest().body("Schedule conflict detected");
-//        }
+
+        if (!timeValidator.isValidSchedule(schedule)) {
+            throw new ValidationException("Schedule conflict detected.");
+        }
+
         return ResponseEntity.ok(courseScheduleService.saveSchedule(schedule));
     }
 
     // Update an existing schedule
     @PutMapping("/{id}")
-    public ResponseEntity<?> updateSchedule(@PathVariable Integer id, @RequestBody CourseSchedule updatedSchedule) {
-        if (!courseScheduleService.getScheduleById(id).isPresent()) {
-            return ResponseEntity.notFound().build();
-        }
+    public ResponseEntity<CourseSchedule> updateSchedule(@PathVariable Integer id, @RequestBody CourseSchedule updatedSchedule) {
+        CourseSchedule existingSchedule = courseScheduleService.getScheduleById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Schedule not found with ID: " + id));
 
         // Validate the updated schedule
-        if (!timeValidator.isValidSchedule(updatedSchedule)) {
-            return ResponseEntity.badRequest().body("Schedule conflict detected");
+        if (updatedSchedule.getCourseTime() > 23 || updatedSchedule.getCourseTime() < 0) {
+            throw new ValidationException("Invalid time. Time must be between 0 and 23.");
         }
 
-        updatedSchedule.setCourseScheduleId(id);
+        if (!timeValidator.isValidSchedule(updatedSchedule)) {
+            throw new ValidationException("Schedule conflict detected.");
+        }
+
+        updatedSchedule.setCourseScheduleId(existingSchedule.getCourseScheduleId());
         return ResponseEntity.ok(courseScheduleService.saveSchedule(updatedSchedule));
     }
 
     // Delete a schedule
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteSchedule(@PathVariable Integer id) {
+        if (!courseScheduleService.getScheduleById(id).isPresent()) {
+            throw new ResourceNotFoundException("Schedule not found with ID: " + id);
+        }
+
         courseScheduleService.deleteSchedule(id);
         return ResponseEntity.noContent().build();
     }
