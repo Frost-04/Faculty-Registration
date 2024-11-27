@@ -28,6 +28,20 @@ public class CourseScheduleService {
 
     // Save a course schedule
     public CourseSchedule saveSchedule(CourseSchedule courseSchedule) {
+        // Check for conflicting course ID and course time
+        boolean conflictExists = courseScheduleRepository.findByCourseIdAndCourseTime(
+                courseSchedule.getCourse().getCourseId(), // Get course ID
+                courseSchedule.getCourseTime(), // Get course time
+                courseSchedule.getCourseDay(),  // Get course day
+                courseSchedule.getRoom()
+
+        ).isPresent();
+
+        if (conflictExists) {
+            throw new IllegalArgumentException("Schedule conflict: This course and time already exist.");
+        }
+
+        // Save the schedule if no conflict exists
         return courseScheduleRepository.save(courseSchedule);
     }
 

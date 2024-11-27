@@ -2,7 +2,11 @@ package com.gaurav.facultyregistration.repository;
 
 import com.gaurav.facultyregistration.entity.Employee;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
+
+@Repository
 public interface EmployeeRepository extends JpaRepository<Employee, Integer> {
-    // Custom queries (if needed) can be added here
+    Optional<Employee> findByEmail(String email);
 }

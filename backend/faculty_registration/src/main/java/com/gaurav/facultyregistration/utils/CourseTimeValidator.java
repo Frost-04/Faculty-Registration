@@ -5,6 +5,7 @@ import com.gaurav.facultyregistration.entity.CourseSchedule;
 import com.gaurav.facultyregistration.repository.CourseScheduleRepository;
 import com.gaurav.facultyregistration.service.CourseScheduleService;
 import org.springframework.stereotype.Component;
+import org.springframework.web.bind.annotation.CrossOrigin;
 
 import java.util.List;
 

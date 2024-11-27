@@ -5,7 +5,7 @@ import lombok.Data;
 @Data
 public class CourseScheduleDTO {
     private Integer courseScheduleId;
-    private String courseTime;
+    private Integer courseTime;
     private String courseDay;
     private String room;
     private String building;

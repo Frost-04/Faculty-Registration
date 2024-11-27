@@ -13,7 +13,7 @@ public class CourseSchedule {
     private Integer courseScheduleId;
 
     @Column(nullable = false)
-    private String courseTime;
+    private Integer courseTime;
 
     @Column(nullable = false)
     private String courseDay;

@@ -38,9 +38,12 @@ public class CourseScheduleController {
     @PostMapping
     public ResponseEntity<?> createSchedule(@RequestBody CourseSchedule schedule) {
         // Validate the schedule using CourseTimeValidator
-        if (!timeValidator.isValidSchedule(schedule)) {
-            return ResponseEntity.badRequest().body("Schedule conflict detected");
+        if(schedule.getCourseTime() >23 || schedule.getCourseTime() <0) {
+            return ResponseEntity.badRequest().body("Invalid Time");
         }
+//        if (!timeValidator.isValidSchedule(schedule)) {
+//            return ResponseEntity.badRequest().body("Schedule conflict detected");
+//        }
         return ResponseEntity.ok(courseScheduleService.saveSchedule(schedule));
     }
 
