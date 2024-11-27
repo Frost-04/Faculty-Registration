@@ -41,8 +41,8 @@ public class Course {
     private Employee employee;
 
     // Getter for schedules
-    @Getter
-    @OneToMany(mappedBy = "course", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<CourseSchedule> schedules = new ArrayList<>();
+  //  @Getter
+   // @OneToMany(mappedBy = "course", cascade = CascadeType.ALL, orphanRemoval = true)
+//private List<CourseSchedule> schedules = new ArrayList<>();
 
 }

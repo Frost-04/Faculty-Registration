@@ -16,18 +16,22 @@ public class CourseScheduleService {
         this.courseScheduleRepository = courseScheduleRepository;
     }
 
+    // Get all course schedules
     public List<CourseSchedule> getAllSchedules() {
         return courseScheduleRepository.findAll();
     }
 
+    // Get a course schedule by ID
     public Optional<CourseSchedule> getScheduleById(Integer scheduleId) {
         return courseScheduleRepository.findById(scheduleId);
     }
 
+    // Save a course schedule
     public CourseSchedule saveSchedule(CourseSchedule courseSchedule) {
         return courseScheduleRepository.save(courseSchedule);
     }
 
+    // Delete a course schedule
     public void deleteSchedule(Integer scheduleId) {
         courseScheduleRepository.deleteById(scheduleId);
     }
