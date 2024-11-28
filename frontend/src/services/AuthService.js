@@ -20,9 +20,9 @@ const login = async (email, password) => {
         });
 
 
+        
         // Save the JWT token in local storage
         localStorage.setItem('token', response.data.token);
-
         return response.data;
     } catch (error) {
         throw new Error(error.response?.data?.message || 'Login failed');
