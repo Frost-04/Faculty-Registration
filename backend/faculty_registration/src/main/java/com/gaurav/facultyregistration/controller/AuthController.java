@@ -29,4 +29,9 @@ public class AuthController {
         }
         return ResponseEntity.status(HttpStatus.LOCKED).body("Invalid credentials");
     }
+
+    @GetMapping("/ping")
+    public ResponseEntity<?> ping() {
+        return ResponseEntity.ok().body("Pong");
+    }
 }

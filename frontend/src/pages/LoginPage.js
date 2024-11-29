@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import AuthService from '../services/AuthService';
 
 const LoginPage = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [backendOnline, setBackendOnline] = useState(true); // State to track backend status
     const navigate = useNavigate();
 
     const handleLogin = async (e) => {
@@ -16,6 +17,15 @@ const LoginPage = () => {
             alert('Invalid credentials.');
         }
     };
+
+    useEffect(() => {
+        const checkBackend = async () => {
+            const isOnline = await AuthService.checkBackendStatus(); // Call function to check backend status
+            setBackendOnline(isOnline);
+        };
+
+        checkBackend();
+    }, []);
 
     return (
         <div
@@ -30,7 +40,7 @@ const LoginPage = () => {
                     width: '400px',
                     borderRadius: '12px',
                     border: 'none',
-                    backgroundColor: '#ffffff',
+                    backgroundColor: backendOnline ? '#efffef' : '#ffebeb', // Dynamic card color
                 }}
             >
                 <h2
@@ -111,6 +121,16 @@ const LoginPage = () => {
                         Login
                     </button>
                 </form>
+                <div
+                    className="text-center mt-4"
+                    style={{
+                        fontWeight: '600',
+                        fontSize: '16px',
+                        color: backendOnline ? '#2a9d8f' : '#e63946',
+                    }}
+                >
+                    Backend: {backendOnline ? 'Online' : 'Offline'}
+                </div>
             </div>
         </div>
     );

@@ -1,7 +1,22 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import DepartmentList from '../components/Department/DepartmentList';
+import AuthService from '../services/AuthService';
 
 const DepartmentPage = () => {
+    const navigate = useNavigate();
+
+    // Logout function
+    const handleLogout = () => {
+        AuthService.logout();
+        navigate('/');
+    };
+
+    // Navigate to Dashboard
+    const goToDashboard = () => {
+        navigate('/dashboard');
+    };
+
     return (
         <div
             className="vh-100"
@@ -18,15 +33,37 @@ const DepartmentPage = () => {
                     borderRadius: '12px',
                 }}
             >
-                <h2
-                    className="text-center mb-4"
-                    style={{
-                        fontWeight: '700',
-                        color: '#023e8a',
-                    }}
-                >
-                    Departments
-                </h2>
+                <div className="d-flex justify-content-between align-items-center mb-4">
+                    <h2
+                        className="text-center mb-0"
+                        style={{
+                            fontWeight: '700',
+                            color: '#023e8a',
+                        }}
+                    >
+                        Departments
+                    </h2>
+                    <div>
+                        <button
+                            onClick={goToDashboard}
+                            className="btn btn-primary me-2"
+                            style={{
+                                fontWeight: '600',
+                            }}
+                        >
+                            Dashboard
+                        </button>
+                        <button
+                            onClick={handleLogout}
+                            className="btn btn-danger"
+                            style={{
+                                fontWeight: '600',
+                            }}
+                        >
+                            Logout
+                        </button>
+                    </div>
+                </div>
                 <DepartmentList />
             </div>
         </div>

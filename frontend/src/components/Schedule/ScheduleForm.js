@@ -85,7 +85,7 @@ const ScheduleForm = () => {
                         type="text"
                         className="form-control"
                         name="courseTime"
-                        placeholder="e.g., 10:00 AM - 12:00 PM"
+                        placeholder="e.g., 10"
                         value={form.courseTime}
                         onChange={handleInputChange}
                         required

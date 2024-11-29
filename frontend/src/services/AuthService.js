@@ -12,7 +12,7 @@ axios.interceptors.request.use(
     }
 );
 
-const API_URL = process.env.REACT_APP_API_BASE_URL;
+//const API_URL = process.env.REACT_APP_API_BASE_URL;
 
 // Login function
 const login = async (email, password) => {
@@ -51,18 +51,40 @@ const login = async (email, password) => {
 //Expired Function
 const isTokenExpired = () => {
     const token = getToken();
-    if (!token) return true;
+    if (!token) return true; // If no token exists, treat it as expired
 
     try {
-        const [, payload] = token.split('.'); // Decode payload
+        // Decode the token payload
+        const [, payload] = token.split('.');
         const decodedPayload = JSON.parse(atob(payload));
         const now = Math.floor(Date.now() / 1000);
-        const result=decodedPayload.exp < now;
-        if(result)
-            alert("from expiration part");
-        return result; // Return true if token is expired
-    } catch {
-        return true; // Treat invalid tokens as expired
+        return false;
+        //return decodedPayload.exp < now;
+    } catch (error) {
+        console.error('Error decoding token:', error);
+        return true; 
+    }
+};
+
+const tokenTimeRemaining = () => {
+    const token = getToken();
+    if (!token) return -1; // If no token exists, treat it as expired
+
+    try {
+        // Decode the token payload
+        const [, payload] = token.split('.');
+        const decodedPayload = JSON.parse(atob(payload));
+        const now = Math.floor(Date.now() / 1000);
+        const remain=decodedPayload.exp-now;
+        if(remain >= 0)
+            return remain;
+        else
+        {   
+            //logout();
+        }
+    } catch (error) {
+        console.error('Error decoding token:', error);
+        return -1; 
     }
 };
 
@@ -70,7 +92,8 @@ const isTokenExpired = () => {
 // Logout function
 const logout = () => {
     localStorage.removeItem('token');
-    delete axios.defaults.headers.common['Authorization']; // Remove the token from local storage
+    delete axios.defaults.headers.common['Authorization'];
+    window.location.href = '/';
 };
 
 // Get the currently logged-in user's token
@@ -96,12 +119,25 @@ const setAuthHeader = () => {
     }
 };
 
+const checkBackendStatus = async () => {
+    try {
+        const response = await axios.get(`/auth/ping`);
+        return response.status === 200;
+    } catch (error) {
+        return false;
+    }
+};
+
+
 const AuthService = {
     login,
     logout,
     getToken,
     isAuthenticated,
     setAuthHeader,
+    isTokenExpired,
+    tokenTimeRemaining,
+    checkBackendStatus
 };
 
 export default AuthService;

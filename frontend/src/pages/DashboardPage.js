@@ -1,15 +1,16 @@
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import AuthService from '../services/AuthService'; // Import AuthService
+import AuthService from '../services/AuthService';
 
 const DashboardPage = () => {
     const navigate = useNavigate();
 
-    // Logout function
     const handleLogout = () => {
-        AuthService.logout(); // Delete JWT token
-        navigate('/'); // Redirect to the login page
+        AuthService.logout();
+        navigate('/');
     };
+
+    const tokenTimeRemaining = AuthService.tokenTimeRemaining();
 
     return (
         <div
@@ -27,9 +28,7 @@ const DashboardPage = () => {
                     backgroundColor: '#ffffff',
                 }}
             >
-                <div
-                    className="d-flex justify-content-between align-items-center mb-4"
-                >
+                <div className="d-flex justify-content-between align-items-center mb-4">
                     <h2
                         style={{
                             fontWeight: '700',
@@ -131,6 +130,16 @@ const DashboardPage = () => {
                             Manage Schedules
                         </Link>
                     </div>
+                </div>
+                <div
+                    className="text-center mt-4"
+                    style={{
+                        fontWeight: '600',
+                        fontSize: '16px',
+                        color: '#149414',
+                    }}
+                >
+                    Session Time Remaining: {`${tokenTimeRemaining} seconds`}
                 </div>
             </div>
         </div>

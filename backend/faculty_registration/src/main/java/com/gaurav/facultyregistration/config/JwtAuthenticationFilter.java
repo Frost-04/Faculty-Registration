@@ -33,7 +33,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             throws ServletException, IOException {
 
         // Get the JWT token from the Authorization header
-        System.out.println("Authorization Header: " + request.getHeader("Authorization"));
+        //System.out.println("Authorization Header: " + request.getHeader("Authorization"));
 
         String authHeader = request.getHeader("Authorization");
         String token = null;
