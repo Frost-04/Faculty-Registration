@@ -5,6 +5,7 @@ import com.gaurav.facultyregistration.exception.ResourceNotFoundException;
 import com.gaurav.facultyregistration.exception.ValidationException;
 import com.gaurav.facultyregistration.service.CourseScheduleService;
 import com.gaurav.facultyregistration.utils.CourseTimeValidator;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,6 +18,7 @@ public class CourseScheduleController {
     private final CourseScheduleService courseScheduleService;
     private final CourseTimeValidator timeValidator;
 
+    @Autowired
     public CourseScheduleController(CourseScheduleService courseScheduleService, CourseTimeValidator timeValidator) {
         this.courseScheduleService = courseScheduleService;
         this.timeValidator = timeValidator;

@@ -6,6 +6,7 @@ import com.gaurav.facultyregistration.exception.ValidationException;
 import com.gaurav.facultyregistration.service.CourseService;
 import com.gaurav.facultyregistration.service.CourseScheduleService;
 import com.gaurav.facultyregistration.utils.CourseTimeValidator;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,6 +20,7 @@ public class CourseController {
     private final CourseScheduleService scheduleService;
     private final CourseTimeValidator timeValidator;
 
+    @Autowired
     public CourseController(CourseService courseService, CourseScheduleService scheduleService, CourseTimeValidator timeValidator) {
         this.courseService = courseService;
         this.scheduleService = scheduleService;

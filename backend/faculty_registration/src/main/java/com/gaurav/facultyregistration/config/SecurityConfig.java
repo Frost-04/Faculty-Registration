@@ -38,7 +38,7 @@ public class SecurityConfig {
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))// Enable CORS
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/auth/login", "/auth/login", "/api/auth/register").permitAll() // Public endpoints
-                        .anyRequest().permitAll() // All other endpoints are secured
+                        .anyRequest().authenticated() // All other endpoints are secured
                 )
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class); // Add JWT filter before UsernamePasswordAuthenticationFilter
 
@@ -51,7 +51,7 @@ public class SecurityConfig {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowedOrigins(List.of("http://localhost:3000")); // Allow React app origin
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS")); // Allow these methods
-        configuration.setAllowedHeaders(List.of("*")); // Allow all headers
+        configuration.setAllowedHeaders(List.of("*","Authorization","token")); // Allow all headers
         configuration.setAllowCredentials(true); // Allow cookies and credentials
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();

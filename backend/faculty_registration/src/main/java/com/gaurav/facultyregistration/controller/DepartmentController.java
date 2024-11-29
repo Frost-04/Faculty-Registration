@@ -3,6 +3,7 @@ package com.gaurav.facultyregistration.controller;
 import com.gaurav.facultyregistration.entity.Department;
 import com.gaurav.facultyregistration.exception.ResourceNotFoundException;
 import com.gaurav.facultyregistration.service.DepartmentService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -14,6 +15,7 @@ public class DepartmentController {
 
     private final DepartmentService departmentService;
 
+    @Autowired
     public DepartmentController(DepartmentService departmentService) {
         this.departmentService = departmentService;
     }

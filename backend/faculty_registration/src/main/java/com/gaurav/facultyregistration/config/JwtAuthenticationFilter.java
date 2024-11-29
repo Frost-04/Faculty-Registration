@@ -16,6 +16,8 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import java.io.IOException;
 
 @Component
+@CrossOrigin(origins = "http://localhost:3000")
+
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final JwtTokenProvider jwtTokenProvider;
@@ -31,14 +33,21 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             throws ServletException, IOException {
 
         // Get the JWT token from the Authorization header
+        System.out.println("Authorization Header: " + request.getHeader("Authorization"));
+
         String authHeader = request.getHeader("Authorization");
         String token = null;
         String email = null;
 
         if (authHeader != null && authHeader.startsWith("Bearer ")) {
-            token = authHeader.substring(7);
+            token = authHeader.substring(7); // Extract token without "Bearer "
+
             email = jwtTokenProvider.extractEmail(token); // Extract email from token
+        } else if (authHeader != null) {
+            token = authHeader; // Assume token is sent without "Bearer" prefix
+            email = jwtTokenProvider.extractEmail(token);
         }
+        System.out.println(token);
 
         // Validate the token and set the authentication context
         if (email != null && SecurityContextHolder.getContext().getAuthentication() == null) {

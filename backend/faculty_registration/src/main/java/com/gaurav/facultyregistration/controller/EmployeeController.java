@@ -2,6 +2,7 @@ package com.gaurav.facultyregistration.controller;
 
 import com.gaurav.facultyregistration.entity.Employee;
 import com.gaurav.facultyregistration.service.EmployeeService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
@@ -15,6 +16,7 @@ public class EmployeeController {
     private final EmployeeService employeeService;
     private final PasswordEncoder passwordEncoder;
 
+    @Autowired
     public EmployeeController(EmployeeService employeeService, PasswordEncoder passwordEncoder) {
         this.employeeService = employeeService;
         this.passwordEncoder = passwordEncoder;

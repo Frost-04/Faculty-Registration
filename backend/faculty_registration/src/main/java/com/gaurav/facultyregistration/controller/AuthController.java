@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/auth")
+@CrossOrigin(origins = "http://localhost:3000")
 public class AuthController {
 
     private final JwtTokenProvider jwtTokenProvider;
@@ -26,6 +27,6 @@ public class AuthController {
             return ResponseEntity.ok().body("Bearer " + token);
             //return ResponseEntity.ok().body("Logged In Successfully");
         }
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid credentials");
+        return ResponseEntity.status(HttpStatus.LOCKED).body("Invalid credentials");
     }
 }
